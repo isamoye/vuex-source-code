@@ -1,5 +1,4 @@
-import { nextTick } from 'vue'
-import { mount } from 'test/helpers'
+import Vue from 'vue'
 import Vuex from '@/index'
 
 const TEST = 'TEST'
@@ -242,8 +241,11 @@ describe('Store', () => {
 
   it('store injection', () => {
     const store = new Vuex.Store()
-    const vm = mount(store, {})
-    expect(vm.$store).toBe(store)
+    const vm = new Vue({
+      store
+    })
+    const child = new Vue({ parent: vm })
+    expect(child.$store).toBe(store)
   })
 
   it('should warn silent option depreciation', () => {
@@ -362,6 +364,21 @@ describe('Store', () => {
 
   // store.watch should only be asserted in non-SSR environment
   if (!isSSR) {
+    it('strict mode: warn mutations outside of handlers', () => {
+      const spy = jest.spyOn(console, 'error').mockImplementation()
+
+      const store = new Vuex.Store({
+        state: {
+          a: 1
+        },
+        strict: true
+      })
+      Vue.config.silent = true
+      store.state.a++
+      expect(spy).toHaveBeenCalled()
+      Vue.config.silent = false
+    })
+
     it('watch: with resetting vm', done => {
       const store = new Vuex.Store({
         state: {
@@ -378,11 +395,11 @@ describe('Store', () => {
       // reset store vm
       store.registerModule('test', {})
 
-      nextTick(() => {
+      Vue.nextTick(() => {
         store.commit(TEST)
         expect(store.state.count).toBe(1)
 
-        nextTick(() => {
+        Vue.nextTick(() => {
           expect(spy).toHaveBeenCalled()
           done()
         })
@@ -410,11 +427,11 @@ describe('Store', () => {
 
       store.watch(spy, spyCb)
 
-      nextTick(() => {
+      Vue.nextTick(() => {
         store.commit(TEST)
         expect(store.state.count).toBe(1)
 
-        nextTick(() => {
+        Vue.nextTick(() => {
           expect(spy).toHaveBeenCalledWith(store.state, store.getters)
           done()
         })

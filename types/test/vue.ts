@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import Vue from "vue";
 import * as Vuex from "../index";
 
 const store = new Vuex.Store({
@@ -7,6 +7,8 @@ const store = new Vuex.Store({
   }
 });
 
-const app = createApp({
+const vm = new Vue({
   store
 });
+
+vm.$store.state.value;

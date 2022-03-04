@@ -6,13 +6,16 @@ Vuex は webpack の [Hot Module Replacement API](https://webpack.js.org/guides/
 
 ``` js
 // store.js
-import { createStore } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import mutations from './mutations'
 import moduleA from './modules/a'
 
+Vue.use(Vuex)
+
 const state = { ... }
 
-const store = createStore({
+const store = new Vuex.Store({
   state,
   mutations,
   modules: {
@@ -38,7 +41,7 @@ if (module.hot) {
 }
 ```
 
-ホットリローディングを試したい場合は、[counter-hot example](https://github.com/vuejs/vuex/tree/main/examples/counter-hot)をチェックアウトしてください。
+ホットリローディングを試したい場合は、[counter-hot example](https://github.com/vuejs/vuex/tree/dev/examples/counter-hot)をチェックアウトしてください。
 
 ## 動的モジュールホットリローディング
 
@@ -46,7 +49,8 @@ if (module.hot) {
 
 ```js
 // store.js
-import { createStore } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 
 // 全てのモジュールをロードする
 function loadModules() {
@@ -68,7 +72,9 @@ function loadModules() {
 
 const { context, modules } = loadModules()
 
-const store = createStore({
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
   modules
 })
 

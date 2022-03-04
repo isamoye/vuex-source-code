@@ -6,13 +6,16 @@ Para mutações e módulos, você precisa usar o método da API `store.hotUpdate
 
 ``` js
 // store.js
-import { createStore } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import mutations from './mutations'
 import moduleA from './modules/a'
 
+Vue.use(Vuex)
+
 const state = { ... }
 
-const store = createStore({
+const store = new Vuex.Store({
   state,
   mutations,
   modules: {
@@ -38,48 +41,4 @@ if (module.hot) {
 }
 ```
 
-Confira o [counter-hot example](https://github.com/vuejs/vuex/tree/main/examples/counter-hot) para brincar com o _hot-reload_.
-
-## Módulo dinâmico de hot reloading
-
-Se você usa exclusivamente módulos, você pode usar `require.context` para carregar e recarregar todos os módulos dinamicamente.
-
-```js
-// store.js
-import { createStore } from 'vuex'
-
-// Carrega todos os módulos.
-function loadModules() {
-  const context = require.context("./modules", false, /([a-z_]+)\.js$/i)
-
-  const modules = context
-    .keys()
-    .map((key) => ({ key, name: key.match(/([a-z_]+)\.js$/i)[1] }))
-    .reduce(
-      (modules, { key, name }) => ({
-        ...modules,
-        [name]: context(key).default
-      }),
-      {}
-    )
-
-  return { context, modules }
-}
-
-const { context, modules } = loadModules()
-
-const store = createStore({
-  modules
-})
-
-if (module.hot) {
-  // Hot reload sempre que qualquer módulo for alterado.
-  module.hot.accept(context.id, () => {
-    const { modules } = loadModules()
-
-    store.hotUpdate({
-      modules
-    })
-  })
-}
-```
+Confira o  [counter-hot example](https://github.com/vuejs/vuex/tree/dev/examples/counter-hot) para brincar com o hot-reload.

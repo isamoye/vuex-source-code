@@ -6,13 +6,16 @@
 
 ``` js
 // store.js
-import { createStore } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import mutations from './mutations'
 import moduleA from './modules/a'
 
+Vue.use(Vuex)
+
 const state = { ... }
 
-const store = createStore({
+const store = new Vuex.Store({
   state,
   mutations,
   modules: {
@@ -38,7 +41,7 @@ if (module.hot) {
 }
 ```
 
-参考热重载示例 [counter-hot](https://github.com/vuejs/vuex/tree/main/examples/counter-hot)。
+参考热重载示例 [counter-hot](https://github.com/vuejs/vuex/tree/dev/examples/counter-hot)。
 
 ## 动态模块热重载
 
@@ -46,7 +49,8 @@ if (module.hot) {
 
 ```js
 // store.js
-import { createStore } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 
 // 加载所有模块。
 function loadModules() {
@@ -68,7 +72,9 @@ function loadModules() {
 
 const { context, modules } = loadModules()
 
-const store = new createStore({
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
   modules
 })
 

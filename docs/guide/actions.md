@@ -10,7 +10,7 @@ Actions are similar to mutations, the differences being that:
 Let's register a simple action:
 
 ``` js
-const store = createStore({
+const store = new Vuex.Store({
   state: {
     count: 0
   },

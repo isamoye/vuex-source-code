@@ -18,8 +18,8 @@ describe('e2e/todomvc', () => {
     clearValue
   } = setupPuppeteer()
 
-  async function testTodoMVC (url) {
-    await page().goto(url)
+  test('todomvc app', async () => {
+    await page().goto('http://localhost:8080/todomvc/')
 
     expect(await isVisible('.main')).toBe(false)
     expect(await isVisible('.footer')).toBe(false)
@@ -150,13 +150,5 @@ describe('e2e/todomvc', () => {
     expect(await count('.todo.completed')).toBe(3)
     await click('label[for="toggle-all"]')
     expect(await count('.todo:not(.completed)')).toBe(3)
-  }
-
-  test('classic', async () => {
-    await testTodoMVC('http://localhost:8080/classic/todomvc/')
-  }, E2E_TIMEOUT)
-
-  test('composition', async () => {
-    await testTodoMVC('http://localhost:8080/composition/todomvc/')
   }, E2E_TIMEOUT)
 })

@@ -11,35 +11,18 @@ const banner = `/*!
  * @license MIT
  */`
 
-const configs = [
-  { input: 'src/index.js', file: 'dist/vuex.esm-browser.js', format: 'es', browser: true, env: 'development' },
-  { input: 'src/index.js', file: 'dist/vuex.esm-browser.prod.js', format: 'es', browser: true, env: 'production' },
-  { input: 'src/index.js', file: 'dist/vuex.esm-bundler.js', format: 'es', env: 'development' },
-  { input: 'src/index.cjs.js', file: 'dist/vuex.global.js', format: 'iife', env: 'development' },
-  { input: 'src/index.cjs.js', file: 'dist/vuex.global.prod.js', format: 'iife', minify: true, env: 'production' },
-  { input: 'src/index.cjs.js', file: 'dist/vuex.cjs.js', format: 'cjs', env: 'development' }
-]
-
-function createEntries() {
+export function createEntries(configs) {
   return configs.map((c) => createEntry(c))
 }
 
 function createEntry(config) {
-  const isGlobalBuild = config.format === 'iife'
-  const isBundlerBuild = config.format !== 'iife' && !config.browser
-  const isBundlerESMBuild = config.format === 'es' && !config.browser
-
   const c = {
-    external: ['vue'],
     input: config.input,
     plugins: [],
     output: {
       banner,
       file: config.file,
-      format: config.format,
-      globals: {
-        vue: 'Vue'
-      }
+      format: config.format
     },
     onwarn: (msg, warn) => {
       if (!/Circular/.test(msg)) {
@@ -48,23 +31,15 @@ function createEntry(config) {
     }
   }
 
-  if (isGlobalBuild) {
+  if (config.format === 'umd') {
     c.output.name = c.output.name || 'Vuex'
   }
 
-  if (!isGlobalBuild) {
-    c.external.push('@vue/devtools-api')
-  }
-
   c.plugins.push(replace({
-    preventAssignment: true,
     __VERSION__: pkg.version,
-    __DEV__: isBundlerBuild
+    __DEV__: config.format !== 'umd' && !config.browser
       ? `(process.env.NODE_ENV !== 'production')`
-      : config.env !== 'production',
-    __VUE_PROD_DEVTOOLS__: isBundlerESMBuild
-      ? '__VUE_PROD_DEVTOOLS__'
-      : 'false'
+      : config.env !== 'production'
   }))
 
   if (config.transpile !== false) {
@@ -80,5 +55,3 @@ function createEntry(config) {
 
   return c
 }
-
-export default createEntries()

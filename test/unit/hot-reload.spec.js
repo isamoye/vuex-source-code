@@ -1,6 +1,5 @@
-import { nextTick } from 'vue'
-import { mount } from 'test/helpers'
-import Vuex from '@/index'
+import Vue from 'vue'
+import Vuex from '../../src/index'
 
 const TEST = 'TEST'
 const isSSR = process.env.VUE_ENV === 'server'
@@ -253,8 +252,7 @@ describe('Hot Reload', () => {
     })
 
     const spy = jest.fn()
-
-    const vm = mount(store, {
+    const vm = new Vue({
       computed: {
         a: () => store.getters.count
       },
@@ -284,7 +282,7 @@ describe('Hot Reload', () => {
     if (isSSR) {
       done()
     } else {
-      nextTick(() => {
+      Vue.nextTick(() => {
         expect(spy).toHaveBeenCalled()
         done()
       })

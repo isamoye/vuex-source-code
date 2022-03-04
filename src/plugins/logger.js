@@ -1,8 +1,8 @@
 // Credits: borrowed code from fcomb/redux-logger
 
-import { deepCopy } from '../util'
+import { deepCopy } from '../util.js'
 
-export function createLogger ({
+export default function createLogger ({
   collapsed = true,
   filter = (mutation, stateBefore, stateAfter) => true,
   transformer = state => state,

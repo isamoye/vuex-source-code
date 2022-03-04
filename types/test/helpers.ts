@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import Vue from "vue";
 
 import {
   mapState,
@@ -10,7 +10,7 @@ import {
 
 const helpers = createNamespacedHelpers('foo');
 
-createApp({
+new Vue({
   computed: {
     ...mapState(["a"]),
     ...mapState('foo', ["b"]),

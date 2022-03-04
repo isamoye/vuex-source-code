@@ -8,15 +8,13 @@ Ao usar o Vuex no modo estrito, pode ser um pouco complicado usar `v-model` em u
 <input v-model="obj.message">
 ```
 
-Assumindo que `obj` é um dado computado que retorna um Objeto do _store_, o `v-model` aqui tentará alterar diretamente o `obj.message` quando o usuário digitar alguma coisa. No modo estrito, isso resultará em um erro porque a mutação não é executada dentro de uma função explícita manipuladora de mutação do Vuex.
+Assumindo que `obj` é um dado computado que retorna um Objeto do _store_, o `v-model` aqui tentará alterar diretamente o `obj.message` quando o usuário digitar alguma coisa. No modo estrito, isso resultará em um erro porque a mutação não é executada dentro de um manipulador explícito de mutação Vuex.
 
-
-O "modo Vuex" de lidar com isso é vinculando o valor do(s) `<input>`'s e chamar uma ação no evento _input_ ou _change_:
+O "modo Vuex" para lidar com isso é vinculando o valor do(s) `<input>`'s e chamar uma ação no evento `input` ou `change`:
 
 ``` html
 <input :value="message" @input="updateMessage">
 ```
-
 ``` js
 // ...
 computed: {
@@ -31,7 +29,7 @@ methods: {
 }
 ```
 
-E aqui está a função manipuladora de mutação:
+E aqui está o manipulador de mutação:
 
 ``` js
 // ...
@@ -42,14 +40,13 @@ mutations: {
 }
 ```
 
-## Dados Computados Bidirecionais (Two-way)
+### Dados Computados Bidirecionais (Two-way)
 
-É certo que o código acima é um pouco mais verboso do que o `v-model` + estado local, e também perdemos alguns dos recursos úteis do `v-model`. Uma abordagem alternativa é usar um dado computado bidirecional com um _setter_:
+É certo que o acima é um pouco mais verboso do que o `v-model` + estado local, e também perdemos alguns dos recursos úteis do `v-model`. Uma abordagem alternativa está usando uma dado computado bidirecional com um _setter_:
 
 ``` html
 <input v-model="message">
 ```
-
 ``` js
 // ...
 computed: {
